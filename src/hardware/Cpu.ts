@@ -1,7 +1,10 @@
 import {System} from "../System";
 import {Hardware} from "./hardware";
+import {ClockListener} from "./imp/ClockListener";
 
-export class Cpu extends Hardware {
+export class Cpu extends Hardware implements ClockListener {
+
+	cpuClockCount : number = 0;
 
     constructor(id,name,debug) {
         
@@ -11,7 +14,11 @@ export class Cpu extends Hardware {
 	
 	this.name = 'CPU';
 
-	this.debug = false;
+	this.debug = true;
         
     }
+	public pulse(){
+		this.cpuClockCount++;
+		this.log("received clock pulse - CPU Clock Count: " + this.cpuClockCount);
+	}
 }

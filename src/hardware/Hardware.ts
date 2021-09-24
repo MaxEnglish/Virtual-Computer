@@ -19,4 +19,11 @@ export class Hardware {
 			console.log("[HW - " + this.name + " id: " + this.id + " - " + Date.now() + "]: " + msg);
 		}
 	}
+
+	//turns a number to hex form
+	public hexLog(num,len){
+		let hex : string = num.toString(16).toUpperCase();
+		//let padding : string = "";
+		return hex.padStart(len,'0');
+	}
 }
