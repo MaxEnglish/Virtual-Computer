@@ -17,6 +17,7 @@ export class Cpu extends Hardware implements ClockListener {
 	this.debug = true;
         
     }
+	//What occurs when the pulse method is called
 	public pulse(){
 		this.cpuClockCount++;
 		this.log("received clock pulse - CPU Clock Count: " + this.cpuClockCount);

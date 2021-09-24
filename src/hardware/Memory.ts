@@ -41,6 +41,7 @@ export class Memory extends Hardware implements ClockListener{
             
         }
     }
+    //What occurs when the pulse method is called
     public pulse(){
         this.log("received clock pulse");
     }

@@ -14,6 +14,7 @@ export class Hardware {
 		this.debug = true;
 	}
 
+	//establishes format for printing messages
 	public log(msg) {
 		if(this.debug == true){
 			console.log("[HW - " + this.name + " id: " + this.id + " - " + Date.now() + "]: " + msg);

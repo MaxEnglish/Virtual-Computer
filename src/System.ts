@@ -55,8 +55,11 @@ export class System extends Hardware {
         this.log('created');
         this._CPU.log('created');
         this.Clock.log('created');
+        //creates array of length 2^16 and fills with 0x00s
         this.RAM.initializeMemory();
+        //prints array values 0-14
         this.RAM.displayMemory();
+        //adds Ram and Cpu to ClockListener Array
         this.Clock.addClockListener(this.RAM);
         this.Clock.addClockListener(this._CPU);
         return true;
