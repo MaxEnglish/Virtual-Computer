@@ -4,6 +4,7 @@ import {Hardware} from "./hardware/Hardware";
 import {Memory} from "./hardware/Memory";
 import {Clock} from "./hardware/Clock";
 import { ClockListener } from "./hardware/imp/ClockListener";
+import { MMU } from "./hardware/MMU";
 
 /*
     Constants
@@ -24,22 +25,22 @@ export class System extends Hardware {
     private RAM : Memory = null;
 
     private Clock : Clock = null;
+
+    private MMU : MMU = null;
     
     public running: boolean = false;
 
-    constructor(id,name,debug) {
+    constructor() {
 
-	    super(id,name,debug);
-
-	    this.name = 'System';
-
-	    this.id = 0;
+	    super(0,'System',false);
 
         this._CPU = new Cpu(0,'CPU',true);
 
-        this.RAM = new Memory(0,'RAM',true);
+        this.RAM = new Memory();
 
         this.Clock = new Clock(0,'Clock',true);
+
+        this.MMU = new MMU(this.RAM);
         
         /*
         Start the system (Analogous to pressing the power button and having voltages flow through the components)
@@ -55,10 +56,19 @@ export class System extends Hardware {
         this.log('created');
         this._CPU.log('created');
         this.Clock.log('created');
-        //creates array of length 2^16 and fills with 0x00s
-        this.RAM.initializeMemory();
+        this.MMU.writeImmediate(0x0000,0xA9);
+        this.MMU.writeImmediate(0x0001,0x0D);
+        this.MMU.writeImmediate(0x0002,0xA9);
+        this.MMU.writeImmediate(0x0003,0x1D);
+        this.MMU.writeImmediate(0x0004,0xA9);
+        this.MMU.writeImmediate(0x0005,0x2D);
+        this.MMU.writeImmediate(0x0006,0xA9);
+        this.MMU.writeImmediate(0x0007,0x3F);
+        this.MMU.writeImmediate(0x0008,0xA9);
+        this.MMU.writeImmediate(0x0009,0xFF);
+        this.MMU.writeImmediate(0x000A,0x00);
         //prints array values 0-14
-        this.RAM.displayMemory();
+        this.RAM.displayMemory(0x00,0x0A);
         //adds Ram and Cpu to ClockListener Array
         this.Clock.addClockListener(this.RAM);
         this.Clock.addClockListener(this._CPU);
@@ -72,4 +82,5 @@ export class System extends Hardware {
     }
 }
 
-let system: System = new System(0,'System',true);
+
+let system : System = new System();

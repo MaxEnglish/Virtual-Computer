@@ -18,6 +18,8 @@ export class Hardware {
 	public log(msg) {
 		if(this.debug == true){
 			console.log("[HW - " + this.name + " id: " + this.id + " - " + Date.now() + "]: " + msg);
+		} else {
+			console.log("[HW - " + this.name + " id: " + this.id + "]: " + msg + " - Addressable Space : " + 0x10000);
 		}
 	}
 
