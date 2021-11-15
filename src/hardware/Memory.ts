@@ -49,37 +49,38 @@ export class Memory extends Hardware implements ClockListener{
         console.log("[HW - MMU id: 0 - "+Date.now()+"]: --------------------------------------");
         console.log("[HW - MMU id: 0 - "+Date.now()+"]: Memory Dump: Complete");
     }
-
+//sets all the values in the memory array to 0x0
 public reset(){
     for(var i = 0; i < this.hexArr.length; i++){
         this.hexArr[i] = 0x0;
     }
 }
 
+//returns the amount of addressable memory
 public getAddressableSpace(){
     return this.memSize;
 }
-
+//returns the MAR
 public getMAR(){
     return this.MAR;
 }
-
+//returns the MDR
 public getMDR(){
     return this.MDR;
 }
-
+//sets the MAR
 public setMAR(xMAR){
     this.MAR = xMAR;
 }
-
+//sets the MDR
 public setMDR(xMDR){
     this.MDR = xMDR;
 }
-
+//sets the MDR to where the MAR is
 public read(){
     this.setMDR(this.hexArr[this.getMAR()]);
 }
-
+//sets the memory location of where MAR is to what MDR is
 public write(){
     this.hexArr[this.getMAR()] = this.getMDR()
 }

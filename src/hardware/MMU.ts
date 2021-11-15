@@ -45,18 +45,17 @@ export class MMU extends Hardware {
         }
         
     }
-
+    //reads the memory object initiated by the MMU object
     public readCPU(){
         this.Mem.read();
     }
 
+    //writes the Memory object initiated by the MMU object
     public writeCpu(){
         this.Mem.write();
     }
-
+    //writes the MAR and MDR when passed an address and a piece of data
     public writeImmediate(address: number,data: number){
-        //console.log("  address  data");
-        //console.log("---------  -----");
         this.Mem.setMAR(address);
         this.Mem.setMDR(data);
         this.Mem.write();
