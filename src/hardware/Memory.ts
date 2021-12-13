@@ -79,13 +79,16 @@ public setMDR(xMDR){
 //sets the MDR to where the MAR is
 public read(){
     this.setMDR(this.hexArr[this.getMAR()]);
+    return this.MDR;
 }
 //sets the memory location of where MAR is to what MDR is
 public write(){
     this.hexArr[this.getMAR()] = this.getMDR()
 }
 
-
+//public readLocation(memLocation){
+    //return this.hexArr[memLocation];
+//}
 
     //What occurs when the pulse method is called
     public pulse(){

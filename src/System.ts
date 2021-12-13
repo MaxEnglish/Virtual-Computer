@@ -33,14 +33,15 @@ export class System extends Hardware {
     constructor() {
 
 	    super(0,'System',false);
-
-        this._CPU = new Cpu(0,'CPU',true);
-
         this.RAM = new Memory();
+
+        this.MMU = new MMU(this.RAM);
+
+        this._CPU = new Cpu(this.MMU);
 
         this.Clock = new Clock(0,'Clock',true);
 
-        this.MMU = new MMU(this.RAM);
+       
         
         /*
         Start the system (Analogous to pressing the power button and having voltages flow through the components)
@@ -67,8 +68,11 @@ export class System extends Hardware {
         this.MMU.writeImmediate(0x0008,0xA9);
         this.MMU.writeImmediate(0x0009,0xFF);
         this.MMU.writeImmediate(0x000A,0x00);
+        this._CPU.powersProgram();
+        this.RAM.setMAR(0x0);
+        this.RAM.read();
         //prints array values 0-14
-        this.RAM.displayMemory(0x00,0x0A);
+        this.RAM.displayMemory(0x00,0x55);
         //adds Ram and Cpu to ClockListener Array
         this.Clock.addClockListener(this.RAM);
         this.Clock.addClockListener(this._CPU);
