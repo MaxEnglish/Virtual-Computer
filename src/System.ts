@@ -62,25 +62,13 @@ export class System extends Hardware {
         this.log('created');
         this._CPU.log('created');
         this.Clock.log('created');
-        this.MMU.writeImmediate(0x0000,0xA9);
-        this.MMU.writeImmediate(0x0001,0x0D);
-        this.MMU.writeImmediate(0x0002,0xA9);
-        this.MMU.writeImmediate(0x0003,0x1D);
-        this.MMU.writeImmediate(0x0004,0xA9);
-        this.MMU.writeImmediate(0x0005,0x2D);
-        this.MMU.writeImmediate(0x0006,0xA9);
-        this.MMU.writeImmediate(0x0007,0x3F);
-        this.MMU.writeImmediate(0x0008,0xA9);
-        this.MMU.writeImmediate(0x0009,0xFF);
-        this.MMU.writeImmediate(0x000A,0x00);
-        this._CPU.powersProgram();
-        this.RAM.setMAR(0x0);
-        this.RAM.read();
-        //prints array values 0-14
-        this.RAM.displayMemory(0x00,0x55);
-        //adds Ram and Cpu to ClockListener Array
         this.Clock.addClockListener(this.RAM);
         this.Clock.addClockListener(this._CPU);
+        this.RAM.setMAR(0x0);
+        this.RAM.read();
+        this._CPU.powersProgram();
+        //this._CPU.systemCallProgram();
+        
         return true;
     }
 

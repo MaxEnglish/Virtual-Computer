@@ -78,6 +78,10 @@ export class MMU extends Hardware {
         this.Mem.displayMemory(start,end);
     }
 
+    public altLog(str){
+        console.log(str);
+    }
+
     //writes the MAR and MDR when passed an address and a piece of data
     public writeImmediate(address: number,data: number){
         this.Mem.setMAR(address);

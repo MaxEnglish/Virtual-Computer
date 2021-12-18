@@ -20,7 +20,7 @@ export class Cpu extends Hardware implements ClockListener {
 
 	public yRegister : number = 0x0;
 
-	public zFlag : number = 0x01;
+	public zFlag : number = 0x00;
 
 	public operand : number = 0x0;
 
@@ -237,14 +237,21 @@ export class Cpu extends Hardware implements ClockListener {
 					this.zFlag = 0;
 					this.step++;
 					break;
+				} else {
+					this.step++;
+					break;
 				}
 			//Branch n bytes if Z flag = 0
 			case 0x00D0:
 				if(this.zFlag == 0x0){
-					this.programCounter -= this.operand;
+					this.programCounter -= Math.round(this.operand / 16);
+					this.step++;
+					break;
+				}else{
 					this.step++;
 					break;
 				}
+			
 			//Increment the value of a byte
 			case 0x00EE:
 				if(this.step == 4){
@@ -255,13 +262,8 @@ export class Cpu extends Hardware implements ClockListener {
 				} 
 			//System Call
 			case 0x00FF:
-				console.log(this.operand);
+				console.log(this.operand.toString(16));
 		}
-	}
-
-	public writeBack(){
-
-
 	}
 
 	public interruptCheck(){
@@ -275,44 +277,42 @@ export class Cpu extends Hardware implements ClockListener {
 	public step : number = 1;
 	//What occurs when the pulse method is called
 	public pulse(){
-		console.log(this.MMUobj.getMAR());
-		console.log(this.MMUobj.getMDR());
-		console.log(this.operand);
-		console.log(this.programCounter);
+		console.log("----------------------------------------------------------------------------------------");
 		switch(this.step){
 			case 1:
+				this.step = 1;
 				this.fetch();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
 				this.step++;
 				this.log("fetch complete");
 				break;
 			case 2:
 				this.decode();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
 				this.step++;
 				this.log("decode complete");
 				break;
 			case 3:
 				this.decode();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
 				this.step++;
 				this.log("decode complete");
 				break;
 			case 4:
 				this.execute();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
-				this.step = 1;
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
+				this.step++;
 				this.log("execute complete");
 				break;
 			case 5:
 				this.execute();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
-				this.step = 1;
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
+				this.step++;
 				this.log("execute complete");
 				break;
 			case 6:
 				this.interruptCheck();
-				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister + " Acc " + this.accumulator + " xReg: " + this.xRegister + " yReg: " + this.yRegister + " zFlag: " + this.zFlag);
+				this.log("CPU State | Mode: 0 PC: " + this.programCounter + " IR: " + this.instructionRegister.toString(16) + " Acc " + this.accumulator.toString(16) + " xReg: " + this.xRegister.toString(16) + " yReg: " + this.yRegister.toString(16) + " zFlag: " + this.zFlag);
 				this.step = 1;
 				this.log("interruptCheck complete");
 				break;
@@ -352,7 +352,7 @@ public systemCallProgram(){
 	this.MMUobj.writeImmediate(0x000F, 0x00);
 	// load the string
 	// 0A 48 65 6c 6c 6f 20 57 6f 72 6c 64 21
-	/*this.MMUobj.writeImmediate(0x0050, 0x0A);
+	this.MMUobj.writeImmediate(0x0050, 0x0A);
 	this.MMUobj.writeImmediate(0x0051, 0x48);
 	this.MMUobj.writeImmediate(0x0052, 0x65);
 	this.MMUobj.writeImmediate(0x0053, 0x6C);
@@ -367,11 +367,11 @@ public systemCallProgram(){
 	this.MMUobj.writeImmediate(0x005C, 0x21);
 	this.MMUobj.writeImmediate(0x005D, 0x0A);
 	this.MMUobj.writeImmediate(0x005E, 0x00);
-	//this.MMUobj.memoryDump(0x0000, 0x0010);
-	//this.MMUobj.altLog("---------------------------")
-	//this.MMUobj.memoryDump(0x0040, 0x0043);
-	//this.MMUobj.altLog("---------------------------")
-	//this.MMUobj.memoryDump(0x0050, 0x005C);*/
+	this.MMUobj.memoryDump(0x0000, 0x0010);
+	this.MMUobj.altLog("---------------------------")
+	this.MMUobj.memoryDump(0x0040, 0x0043);
+	this.MMUobj.altLog("---------------------------")
+	this.MMUobj.memoryDump(0x0050, 0x005C);
 	}
 public powersProgram(){
 	// load constant 0
@@ -414,8 +414,8 @@ public powersProgram(){
 	// globals
 	this.MMUobj.writeImmediate(0x0050, 0x2C);
 	this.MMUobj.writeImmediate(0x0052, 0x00);
-	//this.MMUobj.memoryDump(0x0000, 0x001A);
-	//this.MMUobj.altLog("---------------------------")
-	//this.MMUobj.memoryDump(0x0050, 0x0053);
+	this.MMUobj.memoryDump(0x0000, 0x001A);
+	this.MMUobj.altLog("---------------------------")
+	this.MMUobj.memoryDump(0x0050, 0x0053);
 	}
 }
