@@ -5,6 +5,7 @@ import {Memory} from "./hardware/Memory";
 import {Clock} from "./hardware/Clock";
 import { ClockListener } from "./hardware/imp/ClockListener";
 import { MMU } from "./hardware/MMU";
+import { interruptController } from "./hardware/InterruptController";
 
 /*
     Constants
@@ -24,6 +25,8 @@ export class System extends Hardware {
 
     private RAM : Memory = null;
 
+    private IRT : interruptController;
+
     private Clock : Clock = null;
 
     private MMU : MMU = null;
@@ -37,7 +40,9 @@ export class System extends Hardware {
 
         this.MMU = new MMU(this.RAM);
 
-        this._CPU = new Cpu(this.MMU);
+        this.IRT = new interruptController();
+
+        this._CPU = new Cpu(this.MMU,this.IRT);
 
         this.Clock = new Clock(0,'Clock',true);
 

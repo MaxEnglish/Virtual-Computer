@@ -1,6 +1,4 @@
-import { Clock } from "./Clock";
 import { Hardware } from "./hardware";
-import { System } from "../System";
 import { interruptListener } from "./imp/InterruptListener";
 
 
@@ -8,7 +6,9 @@ export class interruptController extends Hardware {
 
     public listenerArray : interruptListener[];
 
-    //public interruptArray : 
+    public interruptArray = [];
+
+    public interruptBool : boolean;
 
     constructor() {
         
@@ -20,5 +20,17 @@ export class interruptController extends Hardware {
         this.listenerArray.push(obj);
     }
 
+    public acceptInterrupt(interruptPush){
+        this.interruptBool = true;
+        this.interruptArray.push(interruptPush);
+        this.interruptArray.sort((firstItem, secondItem) => firstItem.priority - secondItem.priority);
+    }
+
+    public doFunction(){
+        this.interruptArray.shift().interruptRunning();
+        if(this.interruptArray.length == 0){
+            this.interruptBool = false;
+        }
+    }
 
 }

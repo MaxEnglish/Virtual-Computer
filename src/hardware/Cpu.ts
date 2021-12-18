@@ -2,6 +2,7 @@ import {System} from "../System";
 import {Hardware} from "./hardware";
 import { MMU } from "./MMU";
 import {ClockListener} from "./imp/ClockListener";
+import { interruptController } from "./InterruptController";
 
 export class Cpu extends Hardware implements ClockListener {
 
@@ -23,11 +24,15 @@ export class Cpu extends Hardware implements ClockListener {
 
 	public operand : number = 0x0;
 
-	constructor(MMUobject) {
+	public interruptUnit : interruptController;
+
+	constructor(MMUobject, IRT) {
 
         super(0,'CPU',true);
 
         this.MMUobj = MMUobject;
+
+		this.interruptUnit = IRT;
     }
 
 	public fetch(){
@@ -260,7 +265,9 @@ export class Cpu extends Hardware implements ClockListener {
 	}
 
 	public interruptCheck(){
-
+		if(this.interruptUnit.interruptBool == true){
+			this.interruptUnit.doFunction();
+		}
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

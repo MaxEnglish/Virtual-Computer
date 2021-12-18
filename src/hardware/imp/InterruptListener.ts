@@ -3,8 +3,8 @@
         IRQ : number;
         priority : number;
         name : String;
-        inputBuffer : String[];
-        outputBuffer : String[];
+        inputBuffer? : String[];
+        outputBuffer? : String[];
 
     }
 

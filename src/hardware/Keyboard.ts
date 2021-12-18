@@ -1,4 +1,3 @@
-import { Clock } from "./Clock";
 import { interruptController } from "./InterruptController";
 import { interruptListener } from "./imp/InterruptListener";
 import { Hardware } from "./hardware";
@@ -7,18 +6,23 @@ export class Keyboard extends Hardware implements interruptListener{
 
     public IRQ : 1;
 
-    public priority : 0;
+    public priority : 1;
 
     public name : "Keyboard";
 
-    
+    public interruptUnit : interruptController;
 
+    public outputBuffet : string[];
 
+    constructor(interruptBuffer){
+        super(0,'Keyboard',false);
+        this.interruptUnit = interruptBuffer;
+        this.monitorKeys;
+    }
 
-
-
-
-
+    public interruptRunning(){
+        console.log(this.outputBuffet.shift());
+    }
 
     private monitorKeys() {
         /*
@@ -58,7 +62,7 @@ export class Keyboard extends Hardware implements interruptListener{
             // write the key to stdout all normal like
             //process.stdout.write( key);
             // put the key value in the buffer
-            this.outputBuffer.enqueue(keyPressed);
+            this.outputBuffer.push(keyPressed);
 
             // set the interrupt!
             this.interruptController.acceptInterrupt(this);
